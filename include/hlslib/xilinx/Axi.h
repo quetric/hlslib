@@ -11,17 +11,18 @@ namespace axi {
 
 /// Implements the AXI Stream interface, which is inferred by the name of the
 /// variables (data, keep and last).
-template <typename T>
+template <typename T, unsigned int D=1>
 struct Stream {
 
   T data;
   ap_uint<sizeof(T)> keep{~(keep & 0)}; // Set all bits to 1
   ap_uint<1> last;
+  ap_uint<D> dest{0}; // Default TDEST is zero
 
-  Stream() : data(), keep(0), last(1) {}
-  Stream(decltype(data) const &_data, decltype(last) const &_last)
-      : data(_data), last(_last) {}
-  Stream(decltype(data) const &_data) : data(_data), last(1) {}
+  Stream() : data(), keep(0), last(1), dest(0) {}
+  Stream(decltype(data) const &_data, decltype(last) const &_last, decltype(dest) const &_dest)
+      : data(_data), last(_last), dest(_dest) {}
+  Stream(decltype(data) const &_data) : data(_data), last(1), dest(0) {}
 };
 
 /// Implements the command bus interface for the DataMover IP
@@ -47,14 +48,17 @@ struct Command {
 
 /// Implements the status bus interface for the DataMover IP
 /// https://www.xilinx.com/support/documentation/ip_documentation/axi_datamover/v5_1/pg022_axi_datamover.pdf
-struct Status { // 8 bits
+struct Status { // 32 bits
 
   ap_uint<4> tag{0};
   ap_uint<1> internalError{0};
   ap_uint<1> decodeError{0};
   ap_uint<1> slaveError{0};
   ap_uint<1> okay;
+  ap_uint<23> bytesReceived{0};
+  ap_uint<1> endOfPacket{0};
 
+  Status(bool _okay, _eop) : okay(_okay) endOfPacket(_eop) {}
 	Status(bool _okay) : okay(_okay) {}  
   Status() : okay(true) {}
 };
