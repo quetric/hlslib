@@ -4,6 +4,7 @@
 #pragma once
 
 #include <ap_int.h>
+#include <cstddef>
 
 namespace hlslib {
 
@@ -23,6 +24,7 @@ struct Stream {
   Stream(decltype(data) const &_data, decltype(last) const &_last, decltype(dest) const &_dest)
       : data(_data), last(_last), dest(_dest) {}
   Stream(decltype(data) const &_data) : data(_data), last(1), dest(0) {}
+  Stream(decltype(data) const &_data, decltype(last) const &_last) : data(_data), last(_last), dest(0) {}
 };
 
 /// Implements the command bus interface for the DataMover IP
@@ -58,7 +60,7 @@ struct Status { // 32 bits
   ap_uint<23> bytesReceived{0};
   ap_uint<1> endOfPacket{0};
 
-  Status(bool _okay, _eop) : okay(_okay) endOfPacket(_eop) {}
+  Status(bool _okay, bool _eop) : okay(_okay), endOfPacket(_eop) {}
 	Status(bool _okay) : okay(_okay) {}  
   Status() : okay(true) {}
 };
