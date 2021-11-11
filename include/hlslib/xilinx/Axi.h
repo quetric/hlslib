@@ -61,7 +61,7 @@ struct Status { // 32 bits
   ap_uint<1> endOfPacket{0};
 
   Status(bool _okay, bool _eop) : okay(_okay), endOfPacket(_eop) {}
-	Status(bool _okay) : okay(_okay) {}  
+  Status(bool _okay) : okay(_okay) {}
   Status() : okay(true) {}
 };
 
