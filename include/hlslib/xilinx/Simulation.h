@@ -93,9 +93,9 @@ class _Dataflow {
 };
 #define HLSLIB_DATAFLOW_INIT() ::hlslib::_Dataflow __hlslib_dataflow_context;
 #define HLSLIB_DATAFLOW_FUNCTION(func, ...) \
-  __hlslib_dataflow_context.AddDataflowFunction(func, __VA_ARGS__)
+  __hlslib_dataflow_context.AddDataflowFunction(func, ## __VA_ARGS__)
 #define HLSLIB_FREERUNNING_FUNCTION(func, ...) \
-  __hlslib_dataflow_context.AddFreeRunningFunction(func, __VA_ARGS__)
+  __hlslib_dataflow_context.AddFreeRunningFunction(func, ## __VA_ARGS__)
 #define HLSLIB_DATAFLOW_FINALIZE() __hlslib_dataflow_context.Join();
 }  // namespace
 #endif
