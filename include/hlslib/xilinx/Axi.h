@@ -4,6 +4,7 @@
 #pragma once
 
 #include <ap_int.h>
+#include <ap_axi_sdata.h>
 #include <cstddef>
 
 namespace hlslib {
@@ -25,6 +26,15 @@ struct Stream {
       : data(_data), last(_last), dest(_dest) {}
   Stream(decltype(data) const &_data) : data(_data), last(1), dest(0) {}
   Stream(decltype(data) const &_data, decltype(last) const &_last) : data(_data), last(_last), dest(0) {}
+  Stream(ap_axiu<8*sizeof(T),0,0,D> const &in) : data((T)(in.data)), keep(in.keep), last(in.last), dest(in.dest) {}
+  operator ap_axiu<8*sizeof(T),0,0,D>(){
+    ap_axiu<8*sizeof(T),0,0,D> ret;
+    ret.data = (ap_uint<8*sizeof(T)>)data;
+    ret.keep = keep;
+    ret.last = last;
+    ret.dest = dest;
+    return ret;
+  }
 };
 
 /// Implements the command bus interface for the DataMover IP
